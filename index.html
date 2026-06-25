@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KİME GİDEYİM — Pendik BİLSEM Rehberlik Asistanı</title>
+<style>
+  :root{
+    --ink:#0f1b2d; --ink-soft:#33445c;
+    --paper:#f3f0e7; --paper-card:#fbfaf5;
+    --teal:#0e7a6e; --teal-deep:#0a574f;
+    --amber:#e0883a; --amber-soft:#f2d6b0;
+    --line:#d9d3c4; --bot-bubble:#ffffff; --user-bubble:#0e7a6e;
+    --shadow:0 8px 30px rgba(15,27,45,.10); --radius:18px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+    background:
+      radial-gradient(circle at 12% 18%, rgba(14,122,110,.06), transparent 38%),
+      radial-gradient(circle at 88% 82%, rgba(224,136,58,.07), transparent 40%),
+      var(--paper);
+    color:var(--ink); display:flex; flex-direction:column;
+    height:100dvh; overflow:hidden;
+  }
+  body::before{
+    content:"";position:fixed;inset:0;
+    background-image:radial-gradient(rgba(15,27,45,.05) 1px, transparent 1.4px);
+    background-size:22px 22px;
+    -webkit-mask-image:linear-gradient(135deg, rgba(0,0,0,.55), transparent 30%);
+    mask-image:linear-gradient(135deg, rgba(0,0,0,.55), transparent 30%);
+    pointer-events:none;
+  }
+  header{
+    position:relative;padding:18px 22px 16px;border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg, rgba(251,250,245,.9), rgba(251,250,245,.55));
+    backdrop-filter:blur(6px);flex:0 0 auto;
+  }
+  .brand{display:flex;align-items:center;gap:14px;max-width:920px;margin:0 auto}
+  .mark{width:46px;height:46px;flex:0 0 auto;display:grid;place-items:center}
+  .mark svg{width:46px;height:46px;display:block}
+  .titles{line-height:1.1}
+  .titles h1{font-size:1.34rem;letter-spacing:.14em;font-weight:800;color:var(--ink)}
+  .titles .sub{margin-top:4px;font-size:.78rem;letter-spacing:.04em;color:var(--teal-deep);font-weight:600}
+  .badge{
+    margin-left:auto;font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--ink-soft);border:1px solid var(--line);padding:5px 10px;border-radius:999px;white-space:nowrap;
+  }
+  @media(max-width:560px){ .badge{display:none} .titles h1{font-size:1.08rem;letter-spacing:.1em} }
+
+  main{flex:1 1 auto;overflow-y:auto;scroll-behavior:smooth}
+  .stream{max-width:920px;margin:0 auto;padding:24px 18px 8px;display:flex;flex-direction:column;gap:16px}
+
+  .msg{display:flex;gap:11px;align-items:flex-end;max-width:88%}
+  .msg .av{width:30px;height:30px;border-radius:9px;flex:0 0 auto;display:grid;place-items:center;font-size:.7rem;font-weight:800}
+  .msg.bot .av{background:var(--amber-soft);color:var(--teal-deep)}
+  .msg.user{align-self:flex-end;flex-direction:row-reverse}
+  .msg.user .av{background:var(--teal-deep);color:#fff}
+  .bubble{padding:13px 16px;border-radius:var(--radius);font-size:.95rem;line-height:1.58;box-shadow:var(--shadow)}
+  .msg.bot .bubble{background:var(--bot-bubble);border:1px solid var(--line);border-bottom-left-radius:6px;color:var(--ink)}
+  .msg.user .bubble{background:var(--user-bubble);color:#fff;border-bottom-right-radius:6px}
+  .bubble p{margin:0 0 9px}
+  .bubble p:last-child{margin-bottom:0}
+  .bubble strong{font-weight:700}
+  .bubble .who{display:inline-block;background:var(--amber);color:#3a2410;font-weight:700;padding:1px 9px;border-radius:999px;font-size:.86rem}
+  .bubble ul,.bubble ol{margin:6px 0 4px;padding-left:20px}
+  .bubble li{margin:3px 0}
+  .bubble.err{border-color:#e6b8b2;background:#fdf3f1}
+
+  .typing .bubble{display:flex;gap:5px;align-items:center;padding:15px 17px}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--teal);opacity:.4;animation:b 1.2s infinite}
+  .dot:nth-child(2){animation-delay:.18s}
+  .dot:nth-child(3){animation-delay:.36s}
+  @keyframes b{0%,60%,100%{transform:translateY(0);opacity:.35}30%{transform:translateY(-5px);opacity:1}}
+
+  .chips{max-width:920px;margin:0 auto;padding:6px 18px 2px;display:flex;flex-wrap:wrap;gap:8px}
+  .chip{
+    border:1px solid var(--line);background:var(--paper-card);color:var(--teal-deep);
+    font-size:.8rem;font-weight:600;padding:7px 13px;border-radius:999px;cursor:pointer;
+    transition:transform .12s,background .12s,border-color .12s;
+  }
+  .chip:hover{background:#fff;border-color:var(--teal);transform:translateY(-1px)}
+
+  footer{
+    flex:0 0 auto;border-top:1px solid var(--line);
+    background:linear-gradient(0deg, rgba(251,250,245,.96), rgba(251,250,245,.7));
+    backdrop-filter:blur(6px);padding:12px 18px 16px;
+  }
+  .composer{
+    max-width:920px;margin:0 auto;display:flex;gap:10px;align-items:flex-end;
+    background:#fff;border:1px solid var(--line);border-radius:16px;padding:8px 8px 8px 14px;box-shadow:var(--shadow);
+  }
+  .composer textarea{
+    flex:1;border:none;outline:none;resize:none;font:inherit;font-size:.95rem;line-height:1.5;
+    max-height:130px;background:transparent;color:var(--ink);padding:6px 0;
+  }
+  .composer textarea::placeholder{color:#9aa3b0}
+  .send{
+    flex:0 0 auto;width:42px;height:42px;border-radius:12px;border:none;cursor:pointer;
+    background:var(--teal-deep);color:#fff;display:grid;place-items:center;transition:background .15s,transform .12s;
+  }
+  .send:hover{background:var(--teal)}
+  .send:active{transform:scale(.95)}
+  .send:disabled{opacity:.5;cursor:not-allowed}
+  .send svg{width:20px;height:20px}
+  .foot-note{max-width:920px;margin:8px auto 0;text-align:center;font-size:.7rem;color:var(--ink-soft)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="mark" aria-hidden="true">
+      <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="38" cy="36" r="20" stroke="#0a574f" stroke-width="5" stroke-dasharray="78 40" stroke-linecap="round"/>
+        <circle cx="64" cy="40" r="16" stroke="#e0883a" stroke-width="5" stroke-dasharray="62 38" stroke-linecap="round"/>
+        <circle cx="52" cy="64" r="18" stroke="#0e7a6e" stroke-width="5" stroke-dasharray="70 40" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="titles">
+      <h1>KİME GİDEYİM</h1>
+      <div class="sub">Pendik BİLSEM · 2026–2027 Rehberlik Birimi Asistanı</div>
+    </div>
+    <div class="badge">Rehberlik &amp; Psikolojik Danışma</div>
+  </div>
+</header>
+
+<main id="main">
+  <div class="stream" id="stream"></div>
+</main>
+
+<div class="chips" id="chips"></div>
+
+<footer>
+  <div class="composer">
+    <textarea id="input" rows="1" placeholder="Bir soru yazın… (örn: Rehberlik biriminden hangi konularda destek alabilirim?)"></textarea>
+    <button class="send" id="send" title="Gönder" aria-label="Gönder">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/>
+      </svg>
+    </button>
+  </div>
+  <div class="foot-note">Yanıtlar “BİLSEM Rehberlik ve Psikolojik Danışma Hizmetleri Kılavuzu” (MEB, ÖERHGM) temel alınarak üretilir.</div>
+</footer>
+
+<script>
+/* ============================================================
+   ARAYÜZ — anahtar burada YOK. İstekler /api/chat'e gider.
+============================================================ */
+const stream  = document.getElementById("stream");
+const main    = document.getElementById("main");
+const input   = document.getElementById("input");
+const sendBtn = document.getElementById("send");
+const chipsBar= document.getElementById("chips");
+
+const SUGGESTIONS = [
+  "Rehberlik biriminden hangi konularda destek alabilirim?",
+  "BYF'den ÖYG'ye geçen öğrenciye ne uygulanır?",
+  "DESTEK 1 öğretmeni kim?",
+  "Tüm öğretmenler",
+  "Uyum programı nedir?",
+  "Hangi formlar zorunlu?"
+];
+
+const history = [];
+
+function scrollDown(){ main.scrollTop = main.scrollHeight; }
+
+function addMsg(role, html, isErr){
+  const wrap = document.createElement("div");
+  wrap.className = "msg "+role;
+  const av = role==="bot" ? "RA" : "Siz";
+  wrap.innerHTML = `<div class="av">${av}</div><div class="bubble${isErr?" err":""}">${html}</div>`;
+  stream.appendChild(wrap);
+  scrollDown();
+  return wrap;
+}
+function showTyping(){
+  const wrap = document.createElement("div");
+  wrap.className = "msg bot typing";
+  wrap.innerHTML = `<div class="av">RA</div><div class="bubble"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>`;
+  stream.appendChild(wrap); scrollDown();
+  return wrap;
+}
+function renderChips(){
+  chipsBar.innerHTML = "";
+  SUGGESTIONS.forEach(s=>{
+    const c = document.createElement("button");
+    c.className = "chip"; c.textContent = s;
+    c.onclick = ()=> submit(s);
+    chipsBar.appendChild(c);
+  });
+}
+function escapeHtml(s){
+  return s.replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+}
+
+async function askServer(userText){
+  history.push({ role:"user", content:userText });
+  const trimmed = history.slice(-10);
+
+  const res = await fetch("/api/chat", {
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body:JSON.stringify({ messages: trimmed })
+  });
+
+  if(!res.ok){
+    let detail = "";
+    try{ const j = await res.json(); detail = j.error || ""; }catch(e){}
+    const err = new Error(detail || ("HTTP "+res.status));
+    err.status = res.status;
+    throw err;
+  }
+
+  const data = await res.json();
+  const text = (data.text || "").trim();
+  history.push({ role:"assistant", content:text });
+  return text;
+}
+
+async function botRespond(userText){
+  const typing = showTyping();
+  sendBtn.disabled = true;
+  try{
+    const reply = await askServer(userText);
+    typing.remove();
+    addMsg("bot", reply || "<p>Üzgünüm, bir yanıt oluşturamadım. Sorunuzu farklı bir şekilde yazar mısınız?</p>");
+  }catch(err){
+    typing.remove();
+    let msg;
+    if(err.status===429) msg = `<p>Şu an yoğunluk var. Lütfen birkaç saniye sonra tekrar deneyin.</p>`;
+    else if(err.status===500 && String(err.message).includes("yapılandırılmamış")) msg = `<p>Asistan henüz tam olarak ayarlanmamış. Lütfen kurum yöneticinize bildirin.</p>`;
+    else if(String(err.message).toLowerCase().includes("failed to fetch")) msg = `<p>Bağlantı kurulamadı. İnternet bağlantınızı kontrol edip tekrar deneyin.</p>`;
+    else msg = `<p>Bir sorun oluştu, lütfen tekrar deneyin.</p>`;
+    addMsg("bot", msg, true);
+  }finally{
+    sendBtn.disabled = false;
+  }
+}
+
+function submit(text){
+  const val = (text!==undefined ? text : input.value).trim();
+  if(!val) return;
+  addMsg("user", escapeHtml(val));
+  input.value = ""; autoGrow();
+  botRespond(val);
+}
+
+function autoGrow(){
+  input.style.height = "auto";
+  input.style.height = Math.min(input.scrollHeight,130)+"px";
+}
+input.addEventListener("input", autoGrow);
+input.addEventListener("keydown", e=>{
+  if(e.key==="Enter" && !e.shiftKey){ e.preventDefault(); submit(); }
+});
+sendBtn.addEventListener("click", ()=>submit());
+
+renderChips();
+addMsg("bot", `<p>Hoş geldiniz! 🌟 Ben <strong>KİME GİDEYİM</strong>, Pendik BİLSEM Rehberlik Birimi asistanıyım.</p>
+<p>BİLSEM rehberlik ve psikolojik danışma konularındaki sorularınızı anlayıp yanıtlarım; bir eğitim programının <strong>ilgili öğretmenini</strong> söylerim. Aşağıdaki konulara dokunabilir ya da kendi sorunuzu yazabilirsiniz.</p>`);
+</script>
+</body>
+</html>
